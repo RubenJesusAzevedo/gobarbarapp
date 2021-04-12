@@ -1,6 +1,6 @@
 import React, { useCallback, useRef } from 'react';
 import { FiArrowLeft, FiMail, FiUser, FiLock } from 'react-icons/fi';
-import  { FormHandles } from '@unform/core'
+import { FormHandles } from '@unform/core';
 import { Form } from '@unform/web';
 import * as Yup from 'yup';
 import getValidationErrors from '../../utils/getValidationErrors';
@@ -27,11 +27,13 @@ const SignUp: React.FC = () => {
       await schema.validate(data, {
         abortEarly: false,
       });
+    } catch (err) {
+      if (err instanceof Yup.ValidationError) {
+        const errors = getValidationErrors(err);
 
-    } catch (err) { {}
-      const errors = getValidationErrors(err);
-
-      formRef.current?.setErrors(errors);
+        formRef.current?.setErrors(errors);
+        return;
+      }
     }
   }, []);
 
@@ -46,10 +48,11 @@ const SignUp: React.FC = () => {
           <Input name="name" icon={FiUser} placeholder="Nome" />
           <Input name="email" icon={FiMail} placeholder="E-mail" />
           <Input
-          name="password"
-          icon ={FiLock}
-          type="password"
-          placeholder="Senha" />
+            name="password"
+            icon={FiLock}
+            type="password"
+            placeholder="Senha"
+          />
 
           <Button type="submit">Cadastrar</Button>
         </Form>
@@ -57,10 +60,10 @@ const SignUp: React.FC = () => {
         <a href="">
           <FiArrowLeft />
           Voltar para logon
-          </a>
+        </a>
       </Content>
     </Container>
-  )
-}
+  );
+};
 
 export default SignUp;
